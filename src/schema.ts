@@ -1,5 +1,5 @@
 import {
-  pgTable, uuid, text, integer, boolean, timestamp, date, uniqueIndex, index,
+  pgTable, uuid, text, integer, boolean, timestamp, date, index,
 } from "drizzle-orm/pg-core";
 
 export const statuses = pgTable("statuses", {
@@ -58,8 +58,9 @@ export const updates = pgTable("updates", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
   updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
 }, (t) => ({
-  oneUpdatePerDay: uniqueIndex("updates_workstream_date_unq")
-    .on(t.workstreamId, t.updateDate),
+  // Multiple log entries per workstream per day are allowed (a running log,
+  // not a single daily snapshot), so there is deliberately no uniqueness
+  // constraint on (workstreamId, updateDate) here.
   workstreamDateIdx: index("updates_workstream_date_idx")
     .on(t.workstreamId, t.updateDate),
 }));
