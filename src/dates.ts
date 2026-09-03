@@ -1,4 +1,4 @@
-import { format, differenceInCalendarDays } from "date-fns";
+import { format, differenceInCalendarDays, subDays } from "date-fns";
 import { toZonedTime } from "date-fns-tz";
 
 export const DEFAULT_APP_TZ = "America/New_York";
@@ -15,6 +15,12 @@ function parseCalendarDate(dateStr: string): Date {
 export function todayInAppTz(tz: string = DEFAULT_APP_TZ): string {
   const zoned = toZonedTime(new Date(), tz);
   return format(zoned, "yyyy-MM-dd");
+}
+
+/** Yesterday's date as YYYY-MM-DD in the given IANA timezone. */
+export function yesterdayInAppTz(tz: string = DEFAULT_APP_TZ): string {
+  const zoned = toZonedTime(new Date(), tz);
+  return format(subDays(zoned, 1), "yyyy-MM-dd");
 }
 
 /** "Sunday, 30 August 2026" */
