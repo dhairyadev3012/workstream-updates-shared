@@ -23,6 +23,18 @@ export function yesterdayInAppTz(tz: string = DEFAULT_APP_TZ): string {
   return format(subDays(zoned, 1), "yyyy-MM-dd");
 }
 
+/** The last `count` calendar dates as YYYY-MM-DD, oldest first, ending at
+ * today in the given timezone. lastNDaysInAppTz(7, tz) with today = 2026-09-03
+ * returns 2026-08-28 through 2026-09-03. */
+export function lastNDaysInAppTz(count: number, tz: string = DEFAULT_APP_TZ): string[] {
+  const zoned = toZonedTime(new Date(), tz);
+  const days: string[] = [];
+  for (let i = count - 1; i >= 0; i--) {
+    days.push(format(subDays(zoned, i), "yyyy-MM-dd"));
+  }
+  return days;
+}
+
 /** "Sunday, 30 August 2026" */
 export function formatLongDate(dateStr: string): string {
   return format(parseCalendarDate(dateStr), "EEEE, d MMMM yyyy");
@@ -31,6 +43,11 @@ export function formatLongDate(dateStr: string): string {
 /** "30 Aug" */
 export function formatShortDate(dateStr: string): string {
   return format(parseCalendarDate(dateStr), "d MMM");
+}
+
+/** "Mon" */
+export function formatWeekdayShort(dateStr: string): string {
+  return format(parseCalendarDate(dateStr), "EEE");
 }
 
 /** "today" | "yesterday" | "3 days ago" | "2 weeks ago" */
